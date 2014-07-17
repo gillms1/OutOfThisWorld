@@ -93,12 +93,35 @@
         }
         
     }
+    
+    if ([segue.destinationViewController isKindOfClass:[OWAddSpaceObjectViewController class]]) {
+        OWAddSpaceObjectViewController *addSpaceObjectCV = segue.destinationViewController;
+        addSpaceObjectCV.delegate = self;
+    }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - OWAddSpaceObjectViewControllerDelegate
+
+- (void)didCancel
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)addSpaceObject:(OWSpaceObject *)spaceObject
+{
+    if (!self.addedSpaceObjects) {
+        self.addedSpaceObjects = [[NSMutableArray alloc]init];
+    }
+    
+    [self.addedSpaceObjects addObject:spaceObject];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -131,7 +154,9 @@
     // Configure the cell...
     
     if (indexPath.section == 1) {
-        
+        OWSpaceObject *planet = [self.addedSpaceObjects objectAtIndex:indexPath.row];
+        cell.textLabel.text = planet.name;
+        cell.detailTextLabel.text = planet.nickname;
         
     } else {
         /* Access the OWSpaceObject from our planets array. Use the OWSpaceObject's properties to update the cell's properties.*/

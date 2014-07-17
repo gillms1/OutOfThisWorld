@@ -51,8 +51,28 @@
 */
 
 - (IBAction)cancelButtonPressed:(UIButton *)sender {
+    [self.delegate didCancel];
 }
 
 - (IBAction)addButtonPressed:(id)sender {
+    OWSpaceObject *newSpaceObject = [self returnNewSpaceObject];
+    [self.delegate addSpaceObject:newSpaceObject];
 }
+
+-(OWSpaceObject *)returnNewSpaceObject
+{
+    
+    OWSpaceObject *addedSpaceObject = [[OWSpaceObject alloc]init];
+    
+    addedSpaceObject.name = self.nameTextField.text;
+    addedSpaceObject.nickname = self.nicknameTextField.text;
+    addedSpaceObject.diameter = [self.diameterTextField.text floatValue];
+    addedSpaceObject.temperature = [self.temperatureTextField.text floatValue];
+    addedSpaceObject.numberOfMoons = [self.numberOfMoonsTextField.text intValue];
+    addedSpaceObject.interestFact = self.interestingFactTextField.text;
+    
+    return addedSpaceObject;
+    
+}
+
 @end
