@@ -18,6 +18,24 @@
 
 @implementation OWOuterSpaceTableViewController
 
+#pragma mark - Lazy instanstiation of properties
+
+-(NSMutableArray *)planets
+{
+    if (!_planets){
+        _planets = [[NSMutableArray alloc]init];
+    }
+    return _planets;
+}
+
+-(NSMutableArray *)addedSpaceObjects
+{
+    if (!_addedSpaceObjects){
+        _addedSpaceObjects = [[NSMutableArray alloc]init];
+    }
+    return _addedSpaceObjects;
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -77,7 +95,14 @@
         {
             OWSpaceImageViewController *nextViewController = segue.destinationViewController;
             NSIndexPath *path = [self.tableView indexPathForCell:sender];
-            OWSpaceObject *selectedObject = self.planets[path.row];
+            OWSpaceObject *selectedObject;
+            
+            if (path.section == 0) {
+                selectedObject = self.planets[path.row];;
+            } else if(path.section == 1) {
+                selectedObject = self.addedSpaceObjects[path.row];
+            }
+            
             nextViewController.spaceObject = selectedObject;
         }
     }
@@ -88,7 +113,14 @@
         {
             OWSpaceDataViewController *nextViewController = segue.destinationViewController;
             NSIndexPath *path = sender;
-            OWSpaceObject *selectedObject = self.planets[path.row];
+            OWSpaceObject *selectedObject;
+            
+            if (path.section == 0) {
+                selectedObject = self.planets[path.row];
+            } else if (path.section == 1) {
+                selectedObject = self.addedSpaceObjects[path.row];
+            }
+            
             nextViewController.spaceObject = selectedObject;
         }
         
@@ -157,7 +189,7 @@
         OWSpaceObject *planet = [self.addedSpaceObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = planet.name;
         cell.detailTextLabel.text = planet.nickname;
-        
+        cell.imageView.image = planet.spaceImage;
     } else {
         /* Access the OWSpaceObject from our planets array. Use the OWSpaceObject's properties to update the cell's properties.*/
         OWSpaceObject *planet = [self.planets objectAtIndex:indexPath.row];
